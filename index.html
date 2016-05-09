@@ -1,50 +1,225 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+    <title>Intro to Akka Streams</title>
 
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css">
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/darkula.css">
 
-		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.js"></script>
+    <style>
+        .reveal pre code {
+            padding: 5px;
+            overflow: auto;
+            max-height: 800px;
+            word-wrap: normal;
+        }
+    </style>
 
-		<script>
-			// More info https://github.com/hakimel/reveal.js#configuration
-			Reveal.initialize({
-				history: true,
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section style="height: 100%; width: 100%">
+            <h1>An Introduction to Akka Streams</h1>
 
-				// More info https://github.com/hakimel/reveal.js#dependencies
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
-				]
-			});
-		</script>
-	</body>
+            <h2>Erik LaBianca</h2>
+
+            <p>May 11, 2016</p>
+
+            <p style="position: center;">
+            </p>
+
+            <div style="text-align: left; position: absolute; bottom: 100px; left: 0px;">
+                <i class="fa fa-github"></i> @easel<br>
+                <i class="fa fa-twitter"></i> @easel<br>
+                <i class="fa fa-envelope"></i> erik.labianca@gmail.com<br>
+                <i class="fa fa-linkedin-square"></i></i> https://www.linkedin.com/in/eriklabianca
+                <br>
+                <a href="http://erik.labianca.org/akka-streams-intro">https://erik.labianca.org/akka-streams-intro</a><br>
+                <a href="https://github.com/easel/akka-streams-intro">https://github.com/easel/akka-streams-intro</a><br>
+            </div>
+
+        </section>
+        <section data-markdown="slides/01-overview.md"
+                 data-separator="^\n\n\n"
+                 data-separator-vertical="^\n\n"
+                 data-separator-notes="^Note:"
+                 data-charset="iso-8859-15">
+        </section>
+        <section>
+            <h2>Reactive Streams Ecosystem</h2>
+            <table>
+                <tr>
+                    <th>Async</th>
+                    <th>Sync Streams</th>
+                    <th>Sources</th>
+                    <th>Sinks</th>
+                </tr>
+                <tr>
+                    <td>
+                        <ul>
+                            <li>Akka Streams</li>
+                            <li>fs2</li>
+                            <li>Monix</li>
+                            <li>ReactiveX</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>InputStream</li>
+                            <li>Channels</li>
+                            <li>Stream,Iterator</li>
+                            <li>Unix Pipes</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>any Iterator</li>
+                            <li>nio AsyncChannels</li>
+                            <li>scala Futures</li>
+                            <li>DB queries</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>collection</li>
+                            <li>files</li>
+                            <li>network</li>
+                            <li>streams</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th>Stream Sources (Services)</th>
+                    <th>Stream Processing (Platforms)</th>
+                    <th>Stream Sources (Libraries)</th>
+                    <th></th>
+                </tr>
+                <td>
+                    <ul>
+                        <li>Apache Kafka</li>
+                        <li>AWS Kinesis</li>
+                        <li>AWS SQS, SNS</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li>Spark Streaming</li>
+                        <li>Apache Flink</li>
+                        <li>AWS Lambda</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li>Play</li>
+                        <li>Slick</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                    </ul>
+                </td>
+                </tr>
+            </table>
+        </section>
+        <section data-markdown="slides/example-00-web-requests.md"
+                 data-separator="^\n\n\n"
+                 data-separator-vertical="^\n\n"
+                 data-separator-notes="^Note:"
+                 data-charset="iso-8859-15">
+        </section>
+        <section data-markdown="slides/example-01-akka.md"
+                 data-separator="^\n\n\n"
+                 data-separator-vertical="^\n\n"
+                 data-separator-notes="^Note:"
+                 data-charset="iso-8859-15">
+        </section>
+        <section data-markdown="slides/example-02-akka-streams.md"
+                 data-separator="^\n\n\n"
+                 data-separator-vertical="^\n\n"
+                 data-separator-notes="^Note:"
+                 data-charset="iso-8859-15">
+        </section>
+        <section data-markdown="slides/02-akka-streams.md"
+                 data-separator="^\n\n\n"
+                 data-separator-vertical="^\n\n"
+                 data-separator-notes="^Note:"
+                 data-charset="iso-8859-15">
+        </section>
+        <section data-markdown="slides/03-custom-graphs.md"
+                 data-separator="^\n\n\n"
+                 data-separator-vertical="^\n\n"
+                 data-separator-notes="^Note:"
+                 data-charset="iso-8859-15">
+        </section>
+        <section data-markdown="slides/04-custom-source.md"
+                 data-separator="^\n\n\n"
+                 data-separator-vertical="^\n\n"
+                 data-separator-notes="^Note:"
+                 data-charset="iso-8859-15">
+        </section>
+        <section data-markdown="slides/ZZ-final.md"
+                 data-separator="^\n\n\n"
+                 data-separator-vertical="^\n\n"
+                 data-separator-notes="^Note:"
+                 data-charset="iso-8859-15">
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        history: true,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: "1280",
+        height: "1024",
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.02,
+
+        // Bounds for smallest/largest possible scale to apply to content
+        minScale: 0.2,
+        maxScale: 3,
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+            {src: 'plugin/markdown/marked.js'},
+            {src: 'plugin/markdown/markdown.js'},
+            {src: 'plugin/notes/notes.js', async: true},
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            }
+            }
+        ]
+    });
+    Reveal.configure({slideNumber: 'c/t'});
+</script>
+</body>
 </html>
