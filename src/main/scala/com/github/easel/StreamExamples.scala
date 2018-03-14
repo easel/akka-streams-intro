@@ -1,6 +1,8 @@
 package com.github.easel
 import akka.{Done, NotUsed}
 import akka.actor.ActorSystem
+import akka.http.scaladsl.model.HttpEntity
+import akka.http.scaladsl.unmarshalling.Unmarshaller
 import akka.stream.{ActorMaterializer, DelayOverflowStrategy, OverflowStrategy, ThrottleMode}
 import akka.stream.scaladsl._
 
@@ -27,11 +29,16 @@ object StreamExamples {
     .mapAsyncUnordered(10)(Future.successful) // do 10 things asynchronously
     .intersperse(",") // intersperse "," similar to mkString
 
+  val splitFlow = flow.splitAfter(_ == "10")
+  
   def main(args: Array[String]) = {
     implicit lazy val actorSystem = ActorSystem()
     implicit lazy val materializer = ActorMaterializer()
     val result = source.via(flow).runWith(sink)
     Await.result(result, 1.seconds)
+    
+//    val splitResult = source.via(flow.splitAfter(_ == "10").to(Sink.head)) //.grouped(2).runWith(Sink.head)
   }
+  
 
 }

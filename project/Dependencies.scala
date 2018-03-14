@@ -1,21 +1,27 @@
 import sbt._
 
 object Dependencies {
+
   object Versions {
-    val Akka = "2.4.2"
-    val AkkaStreamExtensions = "0.10.0"
+    val Akka = "2.5.3"
+    val AkkaHttp = "10.0.9"
     val Cats = "0.5.0"
     val RevealJs = "3.2.0"
     val ScalaTex = "0.3.5"
     val ScalaJHttp = "2.3.0"
+    val ScalaTest = "3.0.1"
     val Slick = "3.1.1"
   }
 
   val Akka = Seq(
     "com.typesafe.akka" %% "akka-actor" % Versions.Akka,
+    "com.typesafe.akka" %% "akka-testkit" % Versions.Akka % "test",
     "com.typesafe.akka" %% "akka-stream" % Versions.Akka,
-    "com.typesafe.akka" %% "akka-slf4j" % Versions.Akka,
-    "com.mfglabs" %% "akka-stream-extensions" % Versions.AkkaStreamExtensions
+    "com.typesafe.akka" %% "akka-slf4j" % Versions.Akka
+  )
+  val AkkaHttp = Seq(
+    "com.typesafe.akka" %% "akka-http" % Versions.AkkaHttp,
+    "com.typesafe.akka" %% "akka-http-spray-json" % Versions.AkkaHttp
   )
 
   val Cats = Seq(
@@ -26,8 +32,12 @@ object Dependencies {
     "org.webjars.bower" % "reveal.js" % Versions.RevealJs
   )
 
+  val ScalaTest = Seq(
+    "org.scalatest" %% "scalatest" % Versions.ScalaTest % "test"
+  )
+
   val ScalaTexSite = Seq(
-    "com.lihaoyi" %% "scalatex-site" %Versions.ScalaTex
+    "com.lihaoyi" %% "scalatex-site" % Versions.ScalaTex
   )
 
   val ScalaJHttp = Seq(

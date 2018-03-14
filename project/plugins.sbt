@@ -10,7 +10,7 @@ addSbtPlugin("org.tpolecat" % "tut-plugin" % "0.4.2")
 
 //addSbtPlugin("com.typesafe.sbt" % "sbt-web" % "1.4.0")
 
-//addSbtPlugin("com.github.alexarchambault" % "coursier-sbt-plugin" % "1.0.0-M10")
+addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.0-M12")
 
 //addSbtPlugin("com.lihaoyi" % "scalatex-sbt-plugin" % "0.3.5")
 
